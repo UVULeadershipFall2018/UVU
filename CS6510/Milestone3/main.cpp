@@ -33,6 +33,9 @@ int main(int argc, const char * argv[]) {
 	queues.setQuantums(2, 4);
 	bool v = false;
 	bool g = false;
+	bool rr = false;
+	bool fcfs = false;
+	bool mfq = true;
 	while(running) {
 		
 		char input_string[200], *p;
@@ -97,6 +100,33 @@ int main(int argc, const char * argv[]) {
 					const char *command = fullInputString.c_str();
 					system(command);
 					executing = false;
+				}
+				break;
+			
+			//Four arguments, expecting setRR -v quantum1 quantum2
+			case(3):
+				if(arguments[0] == "setRR"){
+					queues.setQuantums(stoi(arguments[2]), stoi(arguments[3]));
+					cout << endl << "Setting quantum1: " << stoi(arguments[2]) << endl;
+					cout << endl << "Setting quantum2: " << stoi(arguments[3]) << endl;
+				}else if(arguments[0] == "setsched") {
+					if(arguments[3] == "RR" or arguments[3] == "rr") {
+						rr = true;
+						fcfs = false;
+						mfq = false;
+						cout << endl << "Setting scheduling algorithm to round robin. " << endl;
+					}else if(arguments[3] == "FCFS" or arguments[3] == "fcfs") {
+						rr = false;
+						fcfs = true;
+						mfq = false;
+						queues.setQuantums(10000, 20000);
+						cout << endl << "Setting scheduling algorithm to first come first serve. " << endl;
+					}else if(arguments[3] == "MFQ" or arguments[3] == "mfq") {
+						rr = false;
+						fcfs = false;
+						mfq = true;
+						cout << endl << "Setting scheduling algorithm to multifactor queue. " << endl;
+					}
 				}
 				break;
 			//Five arguments, expecting execute <filename> <arrival time> <filename> <arrival time>

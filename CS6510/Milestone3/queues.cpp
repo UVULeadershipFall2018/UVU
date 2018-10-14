@@ -30,9 +30,20 @@ bool Queues::checkForMemoryOverlap() {
 
 void Queues::pushReadyQueue(Pcb p){
 	p.currentState = "stateReady";
-	p.pbqNum = 0;
-	p.pbqQuantum = readyQueue0.quantum;
-	readyQueue0.pushQueue(p);
+	switch(p.pbqNum){
+		case(0):
+			p.pbqQuantum = readyQueue0.quantum;
+			readyQueue0.pushQueue(p);
+			break;
+		case(1):
+			p.pbqQuantum = readyQueue1.quantum;
+			readyQueue1.pushQueue(p);
+			break;
+		case(2):
+			p.pbqQuantum = readyQueue2.quantum;
+			readyQueue2.pushQueue(p);
+			break;
+	}
 };
 
 void Queues::pushJobQueue(Pcb p){
@@ -148,7 +159,7 @@ std::list<Pcb> Queues::fetchProcesses(){
 }
 
 void Queues::adjustPbq() {
-	if(nextInJobQueue()->shiftingQueues){
+	if(nextInJobQueue()->shiftingQueues and nextInJobQueue()->currentState != "stateTerminated"){
 		nextInJobQueue()->shiftingQueues = false;
 		switch(nextInJobQueue()->pbqNum) {
 			case(0):
@@ -171,7 +182,7 @@ void Queues::adjustPbq() {
 				readyQueue2.pushQueue(popJobQueue());
 				break;
 		}
-	}else if(nextInJobQueue()->nextRound){
+	}else if(nextInJobQueue()->nextRound and nextInJobQueue()->currentState != "stateTerminated"){
 		nextInJobQueue()->nextRound = false;
 		switch(nextInJobQueue()->pbqNum) {
 			case(0):

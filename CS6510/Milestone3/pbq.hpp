@@ -19,7 +19,7 @@ struct Pbq {
 	int quantum = 0;
 	void setQuantum(int q) { quantum = q; }
 	void setPriority(int p) { priority = p; }
-	void pushQueue(Pcb p) { queue.push_back(p); }
+	void pushQueue(Pcb p) { p.currentState = "stateReady"; queue.push_back(p); }
 	Pcb popQueue() { Pcb returnedPcb = queue.front(); queue.pop_front(); return returnedPcb; }
 	long queueSize() { return queue.size(); }
 };
